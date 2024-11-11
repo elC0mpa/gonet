@@ -13,7 +13,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         go-version: [1.22]
-    continue-on-error: false
 
     steps:
       - name: Checkout Code
@@ -47,10 +46,20 @@ jobs:
           name: netstats-${GOOS}-${GOARCH}
           path: netstats-${GOOS}-${GOARCH}
 
+      - name: Create Git Tag
+        if: github.ref == 'refs/heads/master'
+        run: |
+          TAG_NAME="v${{ github.run_number }}"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+
       - name: Create GitHub Release
         if: github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: "v${{ github.run_number }}"
           files: |
             netstats-linux-amd64
             netstats-darwin-amd64
