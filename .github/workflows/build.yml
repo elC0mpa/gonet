@@ -1,0 +1,48 @@
+name: Build Go Project
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build for Linux and macOS
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        go-version: [1.20] # Specify the Go version you need
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Cache Go Modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ matrix.go-version }}-
+
+      - name: Build for ${{ matrix.os }}
+        run: |
+          GOOS=$(echo ${{ matrix.os }} | awk -F- '{print $1}') # Get target OS (linux or darwin)
+          GOARCH=amd64 go build -o myapp-${GOOS}-${GOARCH}
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: myapp-${{ matrix.os }}-amd64
+          path: myapp-${{ matrix.os }}-amd64
