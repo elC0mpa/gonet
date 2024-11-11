@@ -1,0 +1,34 @@
+# Output of the Go build process
+/build/
+*.out
+
+# Go dependency directories
+/vendor/
+
+# Go test binary and test result files
+*.test
+*.coverprofile
+
+# Dependency files
+go.sum
+
+# IDE/editor configuration files
+.vscode/
+.idea/
+*.swp
+
+# Logs and debugging
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# GitHub Actions workflow artifacts
+*.artifact
+
+# Ignore executable binaries for Unix-based systems (Linux, macOS)
+netstats-*
+
+# Ignore Windows executables
+*.exe
