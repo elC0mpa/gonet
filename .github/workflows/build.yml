@@ -43,7 +43,7 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: netstats-${{ matrix.os }}-amd64
+          name: netstats-${{ matrix.os }}
           path: netstats-${GOOS}-${GOARCH}
 
   release:
@@ -55,10 +55,15 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Download Build Artifacts
+      - name: Download Linux Build Artifact
         uses: actions/download-artifact@v3
         with:
-          name: netstats-${{ matrix.os }}-amd64
+          name: netstats-ubuntu-latest
+
+      - name: Download macOS Build Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: netstats-macos-latest
 
       - name: Create Release
         id: create_release
