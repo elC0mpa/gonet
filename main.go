@@ -5,6 +5,10 @@ import (
 	"os"
 	"runtime"
 	"strings"
+
+	"github.com/elC0mpa/netstats/common"
+	"github.com/elC0mpa/netstats/linux"
+	"github.com/elC0mpa/netstats/macos"
 )
 
 func main() {
@@ -15,13 +19,21 @@ func main() {
 		searchTerm = strings.ToLower(os.Args[1])
 	}
 
-	appUsage, err := getNetworkUsageByApp(searchTerm)
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		return
+	var appUsage map[string][2]float64
+	var err error
+
+	switch runtime.GOOS {
+	case "darwin":
+		appUsage, err = macos.GetNetworkUsageByApp(searchTerm)
+	case "linux":
+		appUsage, err = linux.GetNetworkUsageByApp(searchTerm)
 	}
 
-	printUsageTable(appUsage)
+	if err != nil {
+		panic(err)
+	}
+
+	common.PrintUsageTable(appUsage)
 }
 
 func printOSInfo() {

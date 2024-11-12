@@ -1,6 +1,3 @@
-//go:build linux
-// +build linux
-
 package linux
 
 import (
@@ -9,9 +6,11 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+
+	"github.com/elC0mpa/netstats/common"
 )
 
-func getNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
+func GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
 	output, err := runSSCommand()
 	if err != nil {
 		return nil, err
@@ -24,7 +23,7 @@ func getNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
 		if err != nil || (sentMB <= 0.0 && recvMB <= 0.0) || (searchTerm != "" && !strings.Contains(strings.ToLower(appName), searchTerm)) {
 			continue
 		}
-		accumulateUsage(appUsage, appName, sentMB, recvMB)
+		common.AccumulateUsage(appUsage, appName, sentMB, recvMB)
 	}
 	return appUsage, scanner.Err()
 }

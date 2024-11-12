@@ -1,6 +1,3 @@
-//go:build darwin
-// +build darwin
-
 package macos
 
 import (
@@ -10,9 +7,11 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"github.com/elC0mpa/netstats/common"
 )
 
-func getNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
+func GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
 	output, err := runNettopCommand()
 	if err != nil {
 		return nil, err
@@ -25,7 +24,7 @@ func getNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
 		if err != nil || (sentMB <= 0.0 && recvMB <= 0.0) || (searchTerm != "" && !strings.Contains(strings.ToLower(appName), searchTerm)) {
 			continue
 		}
-		accumulateUsage(appUsage, appName, sentMB, recvMB)
+		common.AccumulateUsage(appUsage, appName, sentMB, recvMB)
 	}
 	return appUsage, scanner.Err()
 }
@@ -44,7 +43,7 @@ func parseNettopLine(line string) (string, float64, float64, error) {
 		return "", 0, 0, fmt.Errorf("invalid line format")
 	}
 
-	appName := formatAppName(fields[1])
+	appName := common.FormatAppName(fields[1])
 	bytesSent, _ := strconv.ParseFloat(fields[5], 64)
 	bytesRecv, _ := strconv.ParseFloat(fields[4], 64)
 

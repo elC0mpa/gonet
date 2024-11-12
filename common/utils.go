@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func formatAppName(fullName string) string {
+func FormatAppName(fullName string) string {
 	baseName := strings.Split(strings.TrimSpace(fullName), ".")[0]
 	words := strings.Fields(baseName)
 	if len(words) > 2 {
@@ -14,7 +14,7 @@ func formatAppName(fullName string) string {
 	return baseName
 }
 
-func accumulateUsage(appUsage map[string][2]float64, appName string, sentMB, recvMB float64) {
+func AccumulateUsage(appUsage map[string][2]float64, appName string, sentMB, recvMB float64) {
 	if usage, exists := appUsage[appName]; exists {
 		appUsage[appName] = [2]float64{usage[0] + sentMB, usage[1] + recvMB}
 	} else {
@@ -22,7 +22,7 @@ func accumulateUsage(appUsage map[string][2]float64, appName string, sentMB, rec
 	}
 }
 
-func printUsageTable(appUsage map[string][2]float64) {
+func PrintUsageTable(appUsage map[string][2]float64) {
 	fmt.Printf("\033[1;34m%-30s %-15s %-15s\033[0m\n", "Application", "Sent", "Received")
 
 	rowColor := "\033[0m"
