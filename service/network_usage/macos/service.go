@@ -12,8 +12,14 @@ import (
 	"github.com/elC0mpa/netstats/model/network"
 )
 
-func GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
-	output, err := runCommand()
+type MacNetworkUsage struct{}
+
+func New() MacNetworkUsage {
+	return MacNetworkUsage{}
+}
+
+func (ns MacNetworkUsage) GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
+	output, err := ns.runCommand()
 	if err != nil {
 		return nil, err
 	}
@@ -21,7 +27,7 @@ func GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
 	appUsage := make(map[string][2]float64)
 	scanner := bufio.NewScanner(&output)
 	for scanner.Scan() {
-		netInfo, err := parseCommand(scanner.Text())
+		netInfo, err := ns.parseCommand(scanner.Text())
 		if err != nil || (netInfo.SentBytes <= 0.0 && netInfo.ReceivedBytes <= 0.0) || (searchTerm != "" && !strings.Contains(strings.ToLower(netInfo.AppName), searchTerm)) {
 			continue
 		}
@@ -30,7 +36,7 @@ func GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
 	return appUsage, scanner.Err()
 }
 
-func runCommand() (bytes.Buffer, error) {
+func (ns MacNetworkUsage) runCommand() (bytes.Buffer, error) {
 	cmd := exec.Command("nettop", "-P", "-L", "1", "-n", "-x")
 	var output bytes.Buffer
 	cmd.Stdout = &output
@@ -38,7 +44,7 @@ func runCommand() (bytes.Buffer, error) {
 	return output, err
 }
 
-func parseCommand(line string) (network.NetworkInfo, error) {
+func (ns MacNetworkUsage) parseCommand(line string) (network.NetworkInfo, error) {
 	fields := strings.Split(line, ",")
 	if len(fields) < 6 {
 		return network.NetworkInfo{AppName: "", ReceivedBytes: 0, SentBytes: 0}, fmt.Errorf("invalid line format")
