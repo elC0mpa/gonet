@@ -17,7 +17,7 @@
 If you have Homebrew installed, you can install `NetStats CLI` using the following command:
 
 ```bash
-brew install yourusername/tap/netstats-cli
+brew install [https://github.com/elC0mpa/netstats](https://github.com/elC0mpa/netstats)
 ```
 
 #### Option 2: Download Binary from Releases
@@ -73,7 +73,7 @@ To build from source, make sure you have [Go](https://golang.org/dl/) installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/netstats-cli.git
+   git clone https://github.com/elC0mpa/netstats.git
    cd netstats-cli
    ```
 
@@ -121,4 +121,4 @@ netstats -f chrome
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE.md) file for details.
