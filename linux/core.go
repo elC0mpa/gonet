@@ -8,10 +8,11 @@ import (
 	"strings"
 
 	"github.com/elC0mpa/netstats/common"
+	"github.com/elC0mpa/netstats/model/network"
 )
 
 func GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
-	output, err := runSSCommand()
+	output, err := runCommand()
 	if err != nil {
 		return nil, err
 	}
@@ -19,16 +20,16 @@ func GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
 	appUsage := make(map[string][2]float64)
 	scanner := bufio.NewScanner(&output)
 	for scanner.Scan() {
-		appName, sentMB, recvMB, err := parseSSLine(scanner.Text())
-		if err != nil || (sentMB <= 0.0 && recvMB <= 0.0) || (searchTerm != "" && !strings.Contains(strings.ToLower(appName), searchTerm)) {
+		networkInfo, err := parseCommand(scanner.Text())
+		if err != nil || (networkInfo.SentBytes <= 0.0 && networkInfo.ReceivedBytes <= 0.0) || (searchTerm != "" && !strings.Contains(strings.ToLower(networkInfo.AppName), searchTerm)) {
 			continue
 		}
-		common.AccumulateUsage(appUsage, appName, sentMB, recvMB)
+		common.AccumulateUsage(appUsage, networkInfo.AppName, networkInfo.SentBytes, networkInfo.ReceivedBytes)
 	}
 	return appUsage, scanner.Err()
 }
 
-func runSSCommand() (bytes.Buffer, error) {
+func runCommand() (bytes.Buffer, error) {
 	cmd := exec.Command("ss", "-tanp")
 	var output bytes.Buffer
 	cmd.Stdout = &output
@@ -36,24 +37,21 @@ func runSSCommand() (bytes.Buffer, error) {
 	return output, err
 }
 
-func parseSSLine(line string) (string, float64, float64, error) {
+func parseCommand(line string) (network.NetworkInfo, error) {
 	fields := strings.Fields(line)
 	if len(fields) < 6 || !strings.Contains(line, "pid=") {
-		return "", 0, 0, fmt.Errorf("invalid line format")
+		return network.NetworkInfo{AppName: "", ReceivedBytes: 0, SentBytes: 0}, fmt.Errorf("invalid line format")
 	}
 
-	var appName string
+	var networkInfo network.NetworkInfo = network.NetworkInfo{SentBytes: 0.01, ReceivedBytes: 0.01}
 	for _, field := range fields {
 		if strings.HasPrefix(field, "users:(") {
-			appName = extractAppName(field)
+			networkInfo.AppName = extractAppName(field)
 			break
 		}
 	}
 
-	sentMB := 0.01
-	recvMB := 0.01
-
-	return appName, sentMB, recvMB, nil
+	return networkInfo, nil
 }
 
 func extractAppName(field string) string {

@@ -9,10 +9,11 @@ import (
 	"strings"
 
 	"github.com/elC0mpa/netstats/common"
+	"github.com/elC0mpa/netstats/model/network"
 )
 
 func GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
-	output, err := runNettopCommand()
+	output, err := runCommand()
 	if err != nil {
 		return nil, err
 	}
@@ -20,16 +21,16 @@ func GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
 	appUsage := make(map[string][2]float64)
 	scanner := bufio.NewScanner(&output)
 	for scanner.Scan() {
-		appName, sentMB, recvMB, err := parseNettopLine(scanner.Text())
-		if err != nil || (sentMB <= 0.0 && recvMB <= 0.0) || (searchTerm != "" && !strings.Contains(strings.ToLower(appName), searchTerm)) {
+		netInfo, err := parseCommand(scanner.Text())
+		if err != nil || (netInfo.SentBytes <= 0.0 && netInfo.ReceivedBytes <= 0.0) || (searchTerm != "" && !strings.Contains(strings.ToLower(netInfo.AppName), searchTerm)) {
 			continue
 		}
-		common.AccumulateUsage(appUsage, appName, sentMB, recvMB)
+		common.AccumulateUsage(appUsage, netInfo.AppName, netInfo.SentBytes, netInfo.ReceivedBytes)
 	}
 	return appUsage, scanner.Err()
 }
 
-func runNettopCommand() (bytes.Buffer, error) {
+func runCommand() (bytes.Buffer, error) {
 	cmd := exec.Command("nettop", "-P", "-L", "1", "-n", "-x")
 	var output bytes.Buffer
 	cmd.Stdout = &output
@@ -37,15 +38,27 @@ func runNettopCommand() (bytes.Buffer, error) {
 	return output, err
 }
 
-func parseNettopLine(line string) (string, float64, float64, error) {
+func parseCommand(line string) (network.NetworkInfo, error) {
 	fields := strings.Split(line, ",")
 	if len(fields) < 6 {
-		return "", 0, 0, fmt.Errorf("invalid line format")
+		return network.NetworkInfo{AppName: "", ReceivedBytes: 0, SentBytes: 0}, fmt.Errorf("invalid line format")
 	}
 
-	appName := common.FormatAppName(fields[1])
-	bytesSent, _ := strconv.ParseFloat(fields[5], 64)
-	bytesRecv, _ := strconv.ParseFloat(fields[4], 64)
+	bytesSent, err := strconv.ParseFloat(fields[5], 64)
+	if err != nil {
+		panic("Problem parsing bytes sent")
+	}
 
-	return appName, bytesSent / 1024 / 1024, bytesRecv / 1024 / 1024, nil
+	bytesRecv, err := strconv.ParseFloat(fields[4], 64)
+	if err != nil {
+		panic("Problem parsing bytes received")
+	}
+
+	var networkInfo network.NetworkInfo = network.NetworkInfo{
+		AppName:       common.FormatAppName(fields[1]),
+		ReceivedBytes: bytesRecv,
+		SentBytes:     bytesSent,
+	}
+
+	return networkInfo, nil
 }
