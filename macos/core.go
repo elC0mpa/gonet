@@ -1,7 +1,7 @@
 //go:build darwin
 // +build darwin
 
-package main
+package macos
 
 import (
 	"bufio"
