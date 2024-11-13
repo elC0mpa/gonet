@@ -1,6 +1,6 @@
-# NetStats CLI
+# `gonet`
 
-`NetStats CLI` is a cross-platform command-line tool for monitoring network usage statistics by application. This tool supports both macOS and Linux and is designed to be easy to build and extend.
+`gonet` is a cross-platform command-line tool for monitoring network usage statistics by application. This tool supports both macOS and Linux and is designed to be easy to build and extend.
 
 ## Features
 
@@ -14,56 +14,56 @@
 
 #### Option 1: Homebrew (Recommended)
 
-If you have Homebrew installed, you can install `NetStats CLI` using the following command:
+If you have Homebrew installed, you can install `gonet` using the following command:
 
 ```bash
-brew install [https://github.com/elC0mpa/netstats](https://github.com/elC0mpa/netstats)
+brew install [https://github.com/elC0mpa/gonet](https://github.com/elC0mpa/gonet)
 ```
 
 #### Option 2: Download Binary from Releases
 
-1. Go to the [Releases page](https://github.com/elC0mpa/netstats/releases).
-2. Download the latest release binary for macOS (`netstats-darwin-amd64`).
+1. Go to the [Releases page](https://github.com/elC0mpa/gonet/releases).
+2. Download the latest release binary for macOS (`gonet-darwin-amd64`).
 3. Make the file executable:
 
    ```bash
-   chmod +x netstats-darwin-amd64
+   chmod +x gonet-darwin-amd64
    ```
 
 4. (Optional) Move the file to `/usr/local/bin` for easy access:
 
    ```bash
-   sudo mv netstats-darwin-amd64 /usr/local/bin/netstats
+   sudo mv gonet-darwin-amd64 /usr/local/bin/gonet
    ```
 
-5. Run `netstats` from any terminal:
+5. Run `gonet` from any terminal:
 
    ```bash
-   netstats
+   gonet
    ```
 
 ### Linux
 
 #### Option 1: Download Binary from Releases
 
-1. Go to the [Releases page](https://github.com/elC0mpa/netstats/releases).
-2. Download the latest release binary for Linux (`netstats-linux-amd64`).
+1. Go to the [Releases page](https://github.com/elC0mpa/gonet/releases).
+2. Download the latest release binary for Linux (`gonet-linux-amd64`).
 3. Make the file executable:
 
    ```bash
-   chmod +x netstats-linux-amd64
+   chmod +x gonet-linux-amd64
    ```
 
 4. (Optional) Move the file to `/usr/local/bin` for easy access:
 
    ```bash
-   sudo mv netstats-linux-amd64 /usr/local/bin/netstats
+   sudo mv gonet-linux-amd64 /usr/local/bin/gonet
    ```
 
-5. Run `netstats` from any terminal:
+5. Run `gonet` from any terminal:
 
    ```bash
-   netstats
+   gonet
    ```
 
 #### Option 2: Build from Source
@@ -73,39 +73,39 @@ To build from source, make sure you have [Go](https://golang.org/dl/) installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/elC0mpa/netstats.git
-   cd netstats-cli
+   git clone https://github.com/elC0mpa/gonet.git
+   cd gonet-cli
    ```
 
 2. Build the binary:
 
    ```bash
    # For macOS
-   GOOS=darwin GOARCH=amd64 go build -o netstats-darwin-amd64
+   GOOS=darwin GOARCH=amd64 go build -o gonet-darwin-amd64
 
    # For Linux
-   GOOS=linux GOARCH=amd64 go build -o netstats-linux-amd64
+   GOOS=linux GOARCH=amd64 go build -o gonet-linux-amd64
    ```
 
 3. Make the file executable and move it to a directory in your `$PATH`:
 
    ```bash
-   chmod +x netstats-linux-amd64
-   sudo mv netstats-linux-amd64 /usr/local/bin/netstats
+   chmod +x gonet-linux-amd64
+   sudo mv gonet-linux-amd64 /usr/local/bin/gonet
    ```
 
-4. Run `netstats`:
+4. Run `gonet`:
 
    ```bash
-   netstats
+   gonet
    ```
 
 ## Usage
 
-After installation, you can run `netstats` to start monitoring network usage.
+After installation, you can run `gonet` to start monitoring network usage.
 
 ```bash
-netstats [options]
+gonet [options]
 ```
 
 ### Options
@@ -116,7 +116,7 @@ netstats [options]
 ### Example
 
 ```bash
-netstats -f chrome
+gonet -f chrome
 ```
 
 ## License
