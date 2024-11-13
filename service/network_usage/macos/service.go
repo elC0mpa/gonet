@@ -52,12 +52,12 @@ func (ns MacNetworkUsage) parseCommand(line string) (network.NetworkInfo, error)
 
 	bytesSent, err := strconv.ParseFloat(fields[5], 64)
 	if err != nil {
-		panic("Problem parsing bytes sent")
+		return network.NetworkInfo{}, fmt.Errorf("problem parsing bytes sent: %w", err)
 	}
 
 	bytesRecv, err := strconv.ParseFloat(fields[4], 64)
 	if err != nil {
-		panic("Problem parsing bytes received")
+		return network.NetworkInfo{}, fmt.Errorf("problem parsing bytes received: %w", err)
 	}
 
 	var networkInfo network.NetworkInfo = network.NetworkInfo{
