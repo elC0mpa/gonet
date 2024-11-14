@@ -3,7 +3,7 @@ package networkresolver
 import (
 	"fmt"
 
-	"github.com/elC0mpa/netstats/model/network"
+	"github.com/elC0mpa/gonet/model/network"
 )
 
 type resolver struct {

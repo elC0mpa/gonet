@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/elC0mpa/netstats/common"
-	"github.com/elC0mpa/netstats/model/network"
+	"github.com/elC0mpa/gonet/common"
+	"github.com/elC0mpa/gonet/model/network"
 )
 
 type MacNetworkUsage struct{}

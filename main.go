@@ -6,11 +6,11 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/elC0mpa/netstats/common"
-	"github.com/elC0mpa/netstats/model/network"
-	networkresolver "github.com/elC0mpa/netstats/service/network_resolver"
-	"github.com/elC0mpa/netstats/service/network_usage/linux"
-	"github.com/elC0mpa/netstats/service/network_usage/macos"
+	"github.com/elC0mpa/gonet/common"
+	"github.com/elC0mpa/gonet/model/network"
+	networkresolver "github.com/elC0mpa/gonet/service/network_resolver"
+	"github.com/elC0mpa/gonet/service/network_usage/linux"
+	"github.com/elC0mpa/gonet/service/network_usage/macos"
 )
 
 func main() {
