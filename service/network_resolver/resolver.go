@@ -10,13 +10,13 @@ type resolver struct {
 	clients map[string]network.NetworkUsage
 }
 
-func NewNetworkResolver(clients map[string]network.NetworkUsage) *resolver {
-	return &resolver{
+func NewNetworkResolver(clients map[string]network.NetworkUsage) NetworkResolver {
+	return resolver{
 		clients: clients,
 	}
 }
 
-func (nr *resolver) GetNetworkUsage(OS string, searchTerm string) (map[string]network.NetworkInfo, error) {
+func (nr resolver) GetNetworkUsage(OS string, searchTerm string) (map[string]network.NetworkInfo, error) {
 	client, ok := nr.clients[OS]
 
 	if !ok {
