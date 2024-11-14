@@ -18,20 +18,20 @@ func New() MacNetworkUsage {
 	return MacNetworkUsage{}
 }
 
-func (ns MacNetworkUsage) GetNetworkUsageByApp(searchTerm string) (map[string][2]float64, error) {
+func (ns MacNetworkUsage) GetNetworkUsageByApp(searchTerm string) (map[string]network.NetworkInfo, error) {
 	output, err := ns.runCommand()
 	if err != nil {
 		return nil, err
 	}
 
-	appUsage := make(map[string][2]float64)
+	appUsage := make(map[string]network.NetworkInfo)
 	scanner := bufio.NewScanner(&output)
 	for scanner.Scan() {
 		netInfo, err := ns.parseCommand(scanner.Text())
-		if err != nil || (netInfo.SentBytes <= 0.0 && netInfo.ReceivedBytes <= 0.0) || (searchTerm != "" && !strings.Contains(strings.ToLower(netInfo.AppName), searchTerm)) {
+		if err != nil || (netInfo.NetworkStats.SentBytes <= 0.0 && netInfo.NetworkStats.ReceivedBytes <= 0.0) || (searchTerm != "" && !strings.Contains(strings.ToLower(netInfo.AppName), searchTerm)) {
 			continue
 		}
-		common.AccumulateUsage(appUsage, netInfo.AppName, netInfo.SentBytes, netInfo.ReceivedBytes)
+		common.AccumulateUsage(appUsage, netInfo)
 	}
 	return appUsage, scanner.Err()
 }
@@ -44,26 +44,25 @@ func (ns MacNetworkUsage) runCommand() (bytes.Buffer, error) {
 	return output, err
 }
 
-func (ns MacNetworkUsage) parseCommand(line string) (network.NetworkInfo, error) {
+func (ns MacNetworkUsage) parseCommand(line string) (network.AppNetworkInfo, error) {
 	fields := strings.Split(line, ",")
 	if len(fields) < 6 {
-		return network.NetworkInfo{AppName: "", ReceivedBytes: 0, SentBytes: 0}, fmt.Errorf("invalid line format")
+		return network.AppNetworkInfo{AppName: "", NetworkStats: network.NetworkInfo{ReceivedBytes: 0, SentBytes: 0}}, fmt.Errorf("invalid line format")
 	}
 
 	bytesSent, err := strconv.ParseFloat(fields[5], 64)
 	if err != nil {
-		return network.NetworkInfo{}, fmt.Errorf("problem parsing bytes sent: %w", err)
+		return network.AppNetworkInfo{}, fmt.Errorf("problem parsing bytes sent: %w", err)
 	}
 
 	bytesRecv, err := strconv.ParseFloat(fields[4], 64)
 	if err != nil {
-		return network.NetworkInfo{}, fmt.Errorf("problem parsing bytes received: %w", err)
+		return network.AppNetworkInfo{}, fmt.Errorf("problem parsing bytes received: %w", err)
 	}
 
-	var networkInfo network.NetworkInfo = network.NetworkInfo{
-		AppName:       common.FormatAppName(fields[1]),
-		ReceivedBytes: bytesRecv,
-		SentBytes:     bytesSent,
+	var networkInfo network.AppNetworkInfo = network.AppNetworkInfo{
+		AppName:      common.FormatAppName(fields[1]),
+		NetworkStats: network.NetworkInfo{ReceivedBytes: bytesRecv, SentBytes: bytesSent},
 	}
 
 	return networkInfo, nil

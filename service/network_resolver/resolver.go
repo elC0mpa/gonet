@@ -16,7 +16,7 @@ func NewNetworkResolver(clients map[string]network.NetworkUsage) *resolver {
 	}
 }
 
-func (nr *resolver) GetNetworkUsage(OS string, searchTerm string) (map[string][2]float64, error) {
+func (nr *resolver) GetNetworkUsage(OS string, searchTerm string) (map[string]network.NetworkInfo, error) {
 	client, ok := nr.clients[OS]
 
 	if !ok {
