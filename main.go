@@ -6,9 +6,11 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/elC0mpa/netstats/common"
-	"github.com/elC0mpa/netstats/linux"
-	"github.com/elC0mpa/netstats/macos"
+	"github.com/elC0mpa/gonet/common"
+	"github.com/elC0mpa/gonet/model/network"
+	networkresolver "github.com/elC0mpa/gonet/service/network_resolver"
+	"github.com/elC0mpa/gonet/service/network_usage/linux"
+	"github.com/elC0mpa/gonet/service/network_usage/macos"
 )
 
 func main() {
@@ -19,16 +21,16 @@ func main() {
 		searchTerm = strings.ToLower(os.Args[1])
 	}
 
-	var appUsage map[string][2]float64
-	var err error
+	linuxClient := linux.New()
+	macClient := macos.New()
 
-	switch runtime.GOOS {
-	case "darwin":
-		appUsage, err = macos.GetNetworkUsageByApp(searchTerm)
-	case "linux":
-		appUsage, err = linux.GetNetworkUsageByApp(searchTerm)
-	}
+	resolver := networkresolver.NewNetworkResolver(
+		map[string]network.NetworkUsage{
+			"linux":  linuxClient,
+			"darwin": macClient,
+		})
 
+	appUsage, err := resolver.GetNetworkUsage(runtime.GOOS, searchTerm)
 	if err != nil {
 		panic(err)
 	}
