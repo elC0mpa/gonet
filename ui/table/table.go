@@ -2,10 +2,8 @@ package table
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
-	"runtime"
 
+	"github.com/elC0mpa/gonet/common"
 	"github.com/elC0mpa/gonet/model/network"
 	"github.com/jedib0t/go-pretty/v6/table"
 )
@@ -23,18 +21,6 @@ func NewTableDrawer() TableDrawer {
 	}
 }
 
-func clearConsole() {
-	var cmd *exec.Cmd
-	switch runtime.GOOS {
-	case "windows":
-		cmd = exec.Command("cmd", "/c", "cls")
-	default:
-		cmd = exec.Command("clear")
-	}
-	cmd.Stdout = os.Stdout
-	cmd.Run()
-}
-
 func (tableDrawer *drawer) Draw(appUsage map[string]network.NetworkInfo) {
 	tableDrawer.table.ResetRows()
 
@@ -42,7 +28,7 @@ func (tableDrawer *drawer) Draw(appUsage map[string]network.NetworkInfo) {
 		tableDrawer.table.AppendRow(table.Row{appName, netInfo.ReceivedBytes, netInfo.SentBytes})
 	}
 
-	clearConsole()
+	common.ClearConsole()
 
 	fmt.Println(tableDrawer.table.Render())
 }
