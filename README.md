@@ -1,6 +1,6 @@
 # `gonet`
 
-`gonet` is a cross-platform command-line tool for monitoring network usage statistics by application. This tool supports both macOS and Linux and is designed to be easy to build and extend.
+`gonet` is a cross-platform CLI for real-time monitoring of network bandwidth usage by process name. It provides detailed network usage statistics for each application, supporting both macOS and Linux.
 
 ## Features
 
@@ -17,23 +17,23 @@
 If you have Homebrew installed, you can install `gonet` using the following command:
 
 ```bash
-brew install [https://github.com/elC0mpa/gonet](https://github.com/elC0mpa/gonet)
+brew install https://github.com/elC0mpa/gonet
 ```
 
 #### Option 2: Download Binary from Releases
 
 1. Go to the [Releases page](https://github.com/elC0mpa/gonet/releases).
-2. Download the latest release binary for macOS (`gonet-darwin-amd64`).
+2. Download the latest release binary for macOS.
 3. Make the file executable:
 
    ```bash
-   chmod +x gonet-darwin-amd64
+   chmod +x gonet-macos-amd64
    ```
 
 4. (Optional) Move the file to `/usr/local/bin` for easy access:
 
    ```bash
-   sudo mv gonet-darwin-amd64 /usr/local/bin/gonet
+   sudo mv gonet-macos-amd64 /usr/local/bin/gonet
    ```
 
 5. Run `gonet` from any terminal:
@@ -118,6 +118,34 @@ gonet [options]
 ```bash
 gonet -f chrome
 ```
+
+## Contributing
+
+We welcome contributions to improve `gonet`! To ensure smooth collaboration, please follow these guidelines:
+
+1. **Branching and Pull Requests**:
+
+   - All pull requests (PRs) should be made to the `develop` branch, not `main`.
+   - Make sure to create a new feature or bug-fix branch from `develop` and submit PRs from there (e.g., `feature/your-feature` or `fix/your-bug`).
+   - Use descriptive names for branches to indicate the purpose of the branch.
+
+2. **Code Quality**:
+
+   - Write clear, concise, and well-documented code.
+   - Run tests before submitting a PR to ensure that your changes don’t introduce any issues.
+   - If you’re adding a new feature, consider including tests to cover your changes.
+
+3. **Commit Messages**:
+
+   - Follow conventional commit messages, e.g., `feat: add new monitoring filter` or `fix: resolve bug in CLI parsing`.
+   - Write clear and concise messages that describe what your commit does.
+
+4. **Review Process**:
+
+   - Once your PR is submitted, it will undergo a review. Please be responsive to any feedback and make requested changes as necessary.
+   - Avoid merging your own PRs; a maintainer will handle the merging once the PR is approved.
+
+Thank you for contributing to `gonet` and helping to make it better!
 
 ## License
 
