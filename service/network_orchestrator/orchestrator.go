@@ -13,15 +13,17 @@ type orchestrator struct {
 	resolver   networkresolver.NetworkResolver
 	timer      *time.Ticker
 	searchTerm string
+	table      table.TableDrawer
 }
 
-func NewNetworkOrchestrator(resolver networkresolver.NetworkResolver, searchTerm string) NetworkOrchestrator {
+func NewNetworkOrchestrator(resolver networkresolver.NetworkResolver, drawer table.TableDrawer, searchTerm string) NetworkOrchestrator {
 	timer := time.NewTicker(1 * time.Second)
 	timer.Stop()
 
 	return orchestrator{
 		resolver:   resolver,
 		timer:      timer,
+		table:      drawer,
 		searchTerm: searchTerm,
 	}
 }
@@ -41,7 +43,8 @@ func (orchestrator orchestrator) Start() chan bool {
 					panic(fmt.Errorf("Error when gathering network usage: %s", err))
 				}
 
-				table.PrintUsageTable(appUsage)
+				orchestrator.table.Draw(appUsage)
+
 			case <-done:
 				return
 			}
