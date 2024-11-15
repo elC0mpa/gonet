@@ -61,9 +61,18 @@ func (ns MacNetworkUsage) parseCommand(line string) (network.AppNetworkInfo, err
 	}
 
 	var networkInfo network.AppNetworkInfo = network.AppNetworkInfo{
-		AppName:      common.FormatAppName(fields[1]),
+		AppName:      extractAppName(fields[1]),
 		NetworkStats: network.NetworkInfo{ReceivedBytes: bytesRecv, SentBytes: bytesSent},
 	}
 
 	return networkInfo, nil
+}
+
+func extractAppName(field string) string {
+	baseName := strings.Split(strings.TrimSpace(field), ".")[0]
+	words := strings.Fields(baseName)
+	if len(words) > 2 {
+		return strings.Join(words[:2], " ")
+	}
+	return baseName
 }

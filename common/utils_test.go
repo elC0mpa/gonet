@@ -8,23 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// func TestFormatAppName(t *testing.T) {
-// 	tests := []struct {
-// 		input    string
-// 		expected string
-// 	}{
-// 		{input: "12:31:48.335784,launchd.1,,,0,0,0,0,0,,,,,,,,,,,,", expected: "launchd"},
-// 		{input: "12:31:48.335833,Telegram.38574,,,808446,164427,0,0,0,,,,,,,,,,,,", expected: "Telegram"},
-// 	}
-//
-// 	for _, test := range tests {
-// 		t.Run(test.input, func(t *testing.T) {
-// 			result := common.FormatAppName(test.input)
-// 			assert.Equal(t, test.expected, result)
-// 		})
-// 	}
-// }
-
 func TestAccumulateUsage(t *testing.T) {
 	appUsage := make(map[string]network.NetworkInfo)
 	appNetworkInfo := network.AppNetworkInfo{
