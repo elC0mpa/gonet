@@ -6,11 +6,12 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/elC0mpa/gonet/common"
 	"github.com/elC0mpa/gonet/model/network"
+	networkorchestrator "github.com/elC0mpa/gonet/service/network_orchestrator"
 	networkresolver "github.com/elC0mpa/gonet/service/network_resolver"
 	"github.com/elC0mpa/gonet/service/network_usage/linux"
 	"github.com/elC0mpa/gonet/service/network_usage/macos"
+	"github.com/elC0mpa/gonet/ui/table"
 )
 
 func main() {
@@ -30,12 +31,12 @@ func main() {
 			"darwin": macClient,
 		})
 
-	appUsage, err := resolver.GetNetworkUsage(runtime.GOOS, searchTerm)
-	if err != nil {
-		panic(err)
-	}
+	drawer := table.NewTableDrawer()
+	orchestrator := networkorchestrator.NewNetworkOrchestrator(resolver, drawer, searchTerm)
 
-	common.PrintUsageTable(appUsage)
+	done := orchestrator.Start()
+
+	<-done
 }
 
 func printOSInfo() {
