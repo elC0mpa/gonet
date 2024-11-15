@@ -51,7 +51,7 @@ func (ns LinuxNetworkUsage) parseCommand(line string) (network.AppNetworkInfo, e
 		return network.AppNetworkInfo{AppName: "", NetworkStats: network.NetworkInfo{ReceivedBytes: 0, SentBytes: 0}}, fmt.Errorf("invalid line format")
 	}
 
-	var networkInfo network.AppNetworkInfo = network.AppNetworkInfo{NetworkStats: network.NetworkInfo{ReceivedBytes: 0.01, SentBytes: 0.01}}
+	var networkInfo network.AppNetworkInfo = network.AppNetworkInfo{NetworkStats: network.NetworkInfo{ReceivedBytes: 1, SentBytes: 1}}
 	for _, field := range fields {
 		if strings.HasPrefix(field, "users:(") {
 			networkInfo.AppName = extractAppName(field)

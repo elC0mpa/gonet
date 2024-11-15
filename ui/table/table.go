@@ -25,7 +25,7 @@ func (tableDrawer *drawer) Draw(appUsage map[string]network.NetworkInfo) {
 	tableDrawer.table.ResetRows()
 
 	for appName, netInfo := range appUsage {
-		tableDrawer.table.AppendRow(table.Row{appName, netInfo.ReceivedBytes, netInfo.SentBytes})
+		tableDrawer.table.AppendRow(table.Row{appName, common.FromBytesToString(netInfo.ReceivedBytes), common.FromBytesToString(netInfo.SentBytes)})
 	}
 
 	common.ClearConsole()
