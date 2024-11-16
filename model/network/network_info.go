@@ -1,8 +1,13 @@
 package network
 
 type AppNetworkInfo struct {
-	AppName      string
+	Info      AppInfo
 	NetworkStats NetworkInfo
+}
+
+type AppInfo struct {
+	ProcessID int
+	AppName   string
 }
 
 type NetworkInfo struct {

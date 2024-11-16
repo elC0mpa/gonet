@@ -9,9 +9,9 @@ import (
 )
 
 func TestAccumulateUsage(t *testing.T) {
-	appUsage := make(map[string]network.NetworkInfo)
+	appUsage := make(map[int]network.AppNetworkInfo)
 	appNetworkInfo := network.AppNetworkInfo{
-		AppName: "Telegram",
+		Info: network.AppInfo{AppName: "Telegram", ProcessID: 9384},
 		NetworkStats: network.NetworkInfo{
 			ReceivedBytes: 100,
 			SentBytes:     200,
@@ -20,13 +20,13 @@ func TestAccumulateUsage(t *testing.T) {
 
 	common.AccumulateUsage(appUsage, appNetworkInfo)
 
-	assert.Equal(t, 100.0, appUsage["Telegram"].ReceivedBytes)
-	assert.Equal(t, 200.0, appUsage["Telegram"].SentBytes)
+	assert.Equal(t, 100.0, appUsage[9384].NetworkStats.ReceivedBytes)
+	assert.Equal(t, 200.0, appUsage[9384].NetworkStats.SentBytes)
 
 	appNetworkInfo.NetworkStats.ReceivedBytes = 50
 	appNetworkInfo.NetworkStats.SentBytes = 50
 	common.AccumulateUsage(appUsage, appNetworkInfo)
 
-	assert.Equal(t, 150.0, appUsage["Telegram"].ReceivedBytes)
-	assert.Equal(t, 250.0, appUsage["Telegram"].SentBytes)
+	assert.Equal(t, 150.0, appUsage[9384].NetworkStats.ReceivedBytes)
+	assert.Equal(t, 250.0, appUsage[9384].NetworkStats.SentBytes)
 }

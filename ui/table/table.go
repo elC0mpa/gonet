@@ -14,21 +14,20 @@ type drawer struct {
 
 func NewTableDrawer() TableDrawer {
 	t := table.NewWriter()
-	t.AppendHeader(table.Row{"Application", "Bytes Rcvd", "Bytes Sent"})
-
+	t.AppendHeader(table.Row{"Pid", "Application", "Bytes Rcvd", "Bytes Sent"})
 	return &drawer{
 		table: t,
 	}
 }
 
-func (tableDrawer *drawer) Draw(appUsage map[string]network.NetworkInfo) {
+func (tableDrawer *drawer) Draw(appUsage map[int]network.AppNetworkInfo) {
 	tableDrawer.table.ResetRows()
 
-	for appName, netInfo := range appUsage {
-		tableDrawer.table.AppendRow(table.Row{appName, common.FromBytesToString(netInfo.ReceivedBytes), common.FromBytesToString(netInfo.SentBytes)})
+	for pId, appNetInfo := range appUsage {
+		tableDrawer.table.AppendRow(table.Row{pId, appNetInfo.Info.AppName, common.FromBytesToString(appNetInfo.NetworkStats.ReceivedBytes), common.FromBytesToString(appNetInfo.NetworkStats.SentBytes)})
 	}
 
-	common.ClearConsole()
+	// common.ClearConsole()
 
 	fmt.Println(tableDrawer.table.Render())
 }

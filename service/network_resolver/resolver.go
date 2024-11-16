@@ -16,7 +16,7 @@ func NewNetworkResolver(clients map[string]network.NetworkUsage) NetworkResolver
 	}
 }
 
-func (nr resolver) GetNetworkUsage(OS string, searchTerm string) (map[string]network.NetworkInfo, error) {
+func (nr resolver) GetNetworkUsage(OS string, searchTerm string) (map[int]network.AppNetworkInfo, error) {
 	client, ok := nr.clients[OS]
 
 	if !ok {
