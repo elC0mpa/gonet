@@ -1,4 +1,4 @@
-name: Build and Release
+name: Build and Release (Master)
 
 on:
   push:
@@ -47,7 +47,6 @@ jobs:
           path: netstats-${GOOS}-${GOARCH}
 
       - name: Create Git Tag
-        if: github.ref == 'refs/heads/master'
         run: |
           TAG_NAME="netstats-v${{ github.run_number }}"
           git config user.name "github-actions"
@@ -56,7 +55,6 @@ jobs:
           git push origin $TAG_NAME
 
       - name: Create GitHub Release
-        if: github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "netstats-v${{ github.run_number }}"
