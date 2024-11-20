@@ -1,13 +1,13 @@
-name: Build and Release
+name: Build and Test (Develop)
 
 on:
   push:
     branches:
-      - master
+      - develop
 
 jobs:
-  build-and-release:
-    name: Build and Release for Linux and macOS
+  build-and-test:
+    name: Build and Test for Linux and macOS
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -46,23 +46,6 @@ jobs:
           name: netstats-${GOOS}-${GOARCH}
           path: netstats-${GOOS}-${GOARCH}
 
-      - name: Create Git Tag
-        if: github.ref == 'refs/heads/master'
+      - name: Run Tests
         run: |
-          TAG_NAME="netstats-v${{ github.run_number }}"
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git tag $TAG_NAME
-          git push origin $TAG_NAME
-
-      - name: Create GitHub Release
-        if: github.ref == 'refs/heads/master'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: "netstats-v${{ github.run_number }}"
-          name: "netstats-v${{ github.run_number }}"
-          files: |
-            netstats-linux-amd64
-            netstats-darwin-amd64
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          go test ./... -v
