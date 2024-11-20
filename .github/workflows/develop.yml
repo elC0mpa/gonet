@@ -5,6 +5,9 @@ on:
     branches:
       - develop
 
+permissions:
+  contents: write
+
 jobs:
   build-and-test:
     name: Build and Test for Linux and macOS
@@ -17,6 +20,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Go
         uses: actions/setup-go@v4
