@@ -49,7 +49,7 @@ jobs:
       - name: Run Tests
         run: |
           go test ./... -v
-
+          
       - name: Create Release Candidate Tag
         run: |
           TAG_NAME="gonet-rc-${{ github.run_number }}"
