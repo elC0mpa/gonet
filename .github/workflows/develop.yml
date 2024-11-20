@@ -38,14 +38,33 @@ jobs:
           GOOS: ${{ matrix.os == 'ubuntu-latest' && 'linux' || 'darwin' }}
           GOARCH: amd64
         run: |
-          go build -o netstats-${GOOS}-${GOARCH}
+          go build -o gonet-${GOOS}-${GOARCH}
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: netstats-${GOOS}-${GOARCH}
-          path: netstats-${GOOS}-${GOARCH}
+          name: gonet-${GOOS}-${GOARCH}
+          path: gonet-${GOOS}-${GOARCH}
 
       - name: Run Tests
         run: |
           go test ./... -v
+          
+      - name: Create Release Candidate Tag
+        run: |
+          TAG_NAME="gonet-rc-${{ github.run_number }}"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "gonet-rc-${{ github.run_number }}"
+          name: "Release Candidate gonet-rc-${{ github.run_number }}"
+          files: |
+            gonet-linux-amd64
+            gonet-darwin-amd64
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
