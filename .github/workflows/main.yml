@@ -7,60 +7,26 @@ on:
 
 jobs:
   build-and-release:
-    name: Build and Release for Linux and macOS
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        go-version: [1.22]
+    name: Build and Release
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          go-version: ${{ matrix.go-version }}
+          node-version: 18
 
-      - name: Cache Go Modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/go/pkg/mod
-            ~/.cache/go-build
-          key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.go-version }}-
+      - name: Install Dependencies
+        run: npm install
 
-      - name: Build for ${{ matrix.os }}
-        env:
-          GOOS: ${{ matrix.os == 'ubuntu-latest' && 'linux' || 'darwin' }}
-          GOARCH: amd64
+      - name: Install GoReleaser
         run: |
-          go build -o netstats-${GOOS}-${GOARCH}
+          curl -sL https://git.io/goreleaser | bash
 
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: netstats-${GOOS}-${GOARCH}
-          path: netstats-${GOOS}-${GOARCH}
-
-      - name: Create Git Tag
-        run: |
-          TAG_NAME="netstats-v${{ github.run_number }}"
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git tag $TAG_NAME
-          git push origin $TAG_NAME
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: "netstats-v${{ github.run_number }}"
-          name: "netstats-v${{ github.run_number }}"
-          files: |
-            netstats-linux-amd64
-            netstats-darwin-amd64
+      - name: Create Production Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release

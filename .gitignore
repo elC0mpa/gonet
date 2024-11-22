@@ -1,24 +1,39 @@
 # Output of the Go build process
 /build/
 *.out
+/dist/
+/bin/
 
 # Go dependency directories
 /vendor/
+/go/pkg
+/.cache
 
 # Go test binary and test result files
 *.test
 *.coverprofile
+*.cover
+*.cov
+*.coverage
+.coverage.out
 
 # Dependency files
 go.sum
+/go.work
+/go.work.sum
 
 # IDE/editor configuration files
 .vscode/
 .idea/
+*.iml
 *.swp
+*.swo
+*~
 
 # Logs and debugging
 *.log
+logs
+*.log.*
 
 # System files
 .DS_Store
@@ -29,6 +44,20 @@ Thumbs.db
 
 # Ignore executable binaries for Unix-based systems (Linux, macOS)
 netstats-*
+gonet-*
 
 # Ignore Windows executables
 *.exe
+*.dll
+
+# Node.js dependencies (for semantic-release setup)
+node_modules/
+package-lock.json
+
+# Semantic-release artifacts
+CHANGELOG.md
+release-notes.md
+
+# Temporary and backup files
+*.tmp
+*.bak
