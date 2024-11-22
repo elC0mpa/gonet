@@ -1,0 +1,13 @@
+project_name: gonet
+release:
+  github:
+    owner: $GITHUB_REPOSITORY_OWNER
+    name: $GITHUB_REPOSITORY_NAME
+builds:
+  - main: ./cmd/gonet
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+    ldflags: "-s -w"
