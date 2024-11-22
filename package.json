@@ -1,0 +1,19 @@
+{
+  "name": "gonet",
+  "version": "0.1.0",
+  "description": "`gonet` is a cross-platform CLI for real-time monitoring of network bandwidth usage by process name. It provides detailed network usage statistics for each application, supporting both macOS and Linux.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jose Gabriel Companioni Benitez, Evert Arias",
+  "license": "MIT",
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/github": "^11.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
+    "semantic-release": "^24.2.0"
+  }
+}
