@@ -1,8 +1,7 @@
+version: 2
+
 project_name: gonet
-release:
-  github:
-    owner: $GITHUB_REPOSITORY_OWNER
-    name: $GITHUB_REPOSITORY_NAME
+
 builds:
   - main: ./cmd/gonet
     goos:
@@ -10,4 +9,24 @@ builds:
       - darwin
     goarch:
       - amd64
-    ldflags: "-s -w"
+    ldflags:
+      - -s -w
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .OS }}_{{ .Arch }}"
+
+release:
+  github:
+    owner: $GITHUB_REPOSITORY_OWNER
+    name: $GITHUB_REPOSITORY_NAME
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+env:
+  - GITHUB_TOKEN
